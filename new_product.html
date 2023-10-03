@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование товара</title>
+</head>
+<body>
+    <h1>Редактирование товара</h1>
+    <form id="editForm">
+        <label for="productCode">Код товара:</label>
+        <input type="text" id="productCode" name="product_code" required><br><br>
+
+        <label for="productName">Наименование товара:</label>
+        <input type="text" id="productName" name="product_name" required><br><br>
+
+        <label for="productPrice">Цена:</label>
+        <input type="number" id="productPrice" name="rec_price" required><br><br>
+
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <script>
+
+        // Обработка отправки формы (вы можете добавить AJAX-запрос для отправки данных на сервер)
+        document.getElementById('editForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Получите значения полей формы и отправьте их на сервер с помощью AJAX-запроса
+            // event.target — это HTML-элемент form
+            let formData = new FormData(e.target);
+
+            // Собираем данные формы в объект
+            let obj = {};
+            formData.forEach((value, key) => obj[key] = value);
+            console.log(formData.str)
+
+                // Отправляем POST-запрос на сервер Flask
+            fetch("http://127.0.0.1:5000/new_product", {
+                method: "POST",
+                body: JSON.stringify(obj),
+                headers: {'accept' : 'application/json','Content-Type': 'application/json'},
+            })
+            .then(response => {
+            if (!response.ok) {
+                new Error('Network response was not ok');
+                }
+            return response.json(); // Попробуйте преобразовать ответ в JSON
+            })
+            .then(data => {
+            console.log(data); // Вывод данных в консоль
+            window.open('show_products.html','_self',false);
+            })
+            .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            });
+        });
+    </script>
+</body>
+</html>
