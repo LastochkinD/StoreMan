@@ -18,8 +18,9 @@ class SellDocument:
         self.doc_products = doc_products
 
     @classmethod
-    def addSellProduct(cls, dp: DataProvider, store_id, sd_id, pr_id, qty, price):
-        dp.exQuery("insert into sell_documents_p(store_id,sell_document_id,product_id,sell_qty,sell_price) values(%s,%s,%s,%s,%s) returning id",(store_id,sd_id,pr_id,qty,price,))
+    def addSellProduct(cls, dp: DataProvider, store_id, stock_id, sd_id, pr_id, qty, price):
+        dp.cursor.execute("insert into sell_documents_p(store_id,stock_id,sell_document_id,product_id,sell_qty,sell_price) values(%s,%s,%s,%s,%s,%s) returning id",(store_id, stock_id, sd_id, pr_id, qty, price,))
+        dp.cursor.execute()
 
     @classmethod
     def newSellDocument(cls,dp:DataProvider, store_id):
