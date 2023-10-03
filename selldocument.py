@@ -20,7 +20,8 @@ class SellDocument:
     @classmethod
     def addSellProduct(cls, dp: DataProvider, store_id, stock_id, sd_id, pr_id, qty, price):
         dp.cursor.execute("insert into sell_documents_p(store_id,stock_id,sell_document_id,product_id,sell_qty,sell_price) values(%s,%s,%s,%s,%s,%s) returning id",(store_id, stock_id, sd_id, pr_id, qty, price,))
-        dp.cursor.execute()
+        dp.cursor.execute("update stock set stock_qty=(stock_qty-%s) where id=%s",(qty,stock_id))
+        dp.connection.commit()
 
     @classmethod
     def newSellDocument(cls,dp:DataProvider, store_id):

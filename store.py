@@ -26,6 +26,21 @@ class Store:
             }
             data.append(product)
         return data
+    
+    def getClients(self):
+        self.dp.exQuery("SELECT id, client_name, client_address, client_phone, client_note FROM clients order by client_name",())
+        rows = self.dp.cursor.fetchall()
+        data = []
+        for row in rows:
+            client = {
+                "id": row[0],
+                "client_name": row[1],
+                "client_address": row[2],
+                "client_phone": row[3],
+                "client_note": row[4],
+            }
+            data.append(client)
+        return data    
 
     def getProduct(self,id: int):
         self.dp.exQuery(f"SELECT id, product_code, product_name, rec_price FROM products where products.id={str(id)}")

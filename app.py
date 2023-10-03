@@ -19,6 +19,10 @@ CORS(app)
 def get_products():
     return jsonify(store.getProducts())
 
+@app.route("/get_clients", methods = ['get'])
+def get_clients():
+    return jsonify(store.getClients())
+
 @app.route("/get_product", methods = ['get'])
 def get_product():
     product = Product.getProductFromDb(store.dp, request.args.get('id'))
