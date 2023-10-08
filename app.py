@@ -23,6 +23,21 @@ def get_products():
 def get_clients():
     return jsonify(store.getClients())
 
+@app.route("/add_client", methods = ['post'])
+def addClient():
+    json_text = request.get_data()
+    json_obj = json.loads(json_text)
+    client = Client.newClient(store.dp,store.id,json_obj["client_name"],json_obj["client_address"],json_obj["client_phone"],json_obj["client_note"])
+    return jsonify(client.getJsonObj())
+
+@app.route("/del_client", methods = ['post'])
+def updateClient():
+    json_text = request.get_data()
+    json_obj = json.loads(json_text)
+    print(json_obj["client_id"])
+    result = Client.delClient(store.dp, int(json_obj["client_id"]))
+    return jsonify({"Result":result})
+
 @app.route("/get_product", methods = ['get'])
 def get_product():
     product = Product.getProductFromDb(store.dp, request.args.get('id'))
@@ -48,13 +63,6 @@ def new_product():
 def delproduct():
     Product.delProduct(store.dp,request.args.get('id'))
     return jsonify({"Result":"Ok"})
-
-@app.route("/add_client", methods = ['post'])
-def addClient():
-    json_text = request.get_data()
-    json_obj = json.loads(json_text)
-    store.createClient(json_obj["client_name"],json_obj["client_address"],json_obj["client_phone"],json_obj["client_note"])
-    return jsonify(json_obj)
 
 @app.route("/get_buy_doc", methods = ['get'])
 def get_buy_doc():

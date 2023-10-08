@@ -53,9 +53,6 @@ class Store:
         }
         return product_data
     
-    def createClient(self, client_name, client_address, client_phone, client_note):
-        self.dp.exQuery(f'insert into clients(store_id,client_name,client_address,client_phone,client_note) values({str(self.id)},\'{client_name}\',\'{client_address}\',\'{client_phone}\',\'{client_note}\')')
-
     def acceptBuyDoc(self,buy_doc_id):
         self.dp.cursor.execute("select accepted from buy_documents where id = %s",(buy_doc_id,))
         row = self.dp.cursor.fetchone()
