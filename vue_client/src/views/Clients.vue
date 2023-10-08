@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div class="container">
       <h1>Список Клиентов</h1>
+      <button class="add-button" @click="showAddClientForm">Добавить Клиента</button>
       <table>
         <thead>
           <tr>
@@ -24,44 +25,90 @@
     </div>
   </template>
   
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        clients: []
-      };
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      clients: [],
+      isAddClientFormVisible: false,
+      newClient: {
+        client_name: '',
+        client_address: '',
+        client_phone: '',
+        client_note: ''
+      }
+    };
+  },
+  methods: {
+    showAddClientForm() {
+      this.isAddClientFormVisible = true;
     },
-    mounted() {
-      // Запрос к серверу для получения списка товаров
-      axios.get('http://127.0.0.1:5000/get_clients')
+    addClient() {
+      // Отправка запроса к серверу для добавления нового клиента
+      axios.post('http://127.0.0.1:5000/add_client', this.newClient)
         .then(response => {
-          // Установка полученных данных в свойство products
-          this.clients = response.data;
+          // Обновление списка клиентов после успешного добавления
+          this.clients.push(response.data);
+          // Скрытие формы добавления клиента
+          this.isAddClientFormVisible = false;
+          // Очистка полей формы
+          this.newClient = {
+            client_name: '',
+            client_address: '',
+            client_phone: '',
+            client_note: ''
+          };
         })
         .catch(error => {
-          console.error('Ошибка при получении данных:', error);
+          console.error('Ошибка при добавлении клиента:', error);
         });
     }
-  };
-  </script>
+  },
+  mounted() {
+    // Запрос к серверу для получения списка клиентов
+    axios.get('http://127.0.0.1:5000/get_clients')
+      .then(response => {
+        // Установка полученных данных в свойство clients
+        this.clients = response.data;
+      })
+      .catch(error => {
+        console.error('Ошибка при получении данных:', error);
+      });
+  }
+};
+</script>
   
   <style scoped>
-  /* Стили для таблицы могут быть добавлены здесь */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
-  </style>
-  
+/* Определение стилей для кнопки и таблицы */
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-client-form {
+  margin-bottom: 20px;
+}
+
+.add-button {
+  margin-bottom: 10px;
+  align-self:flex-start;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+</style>
