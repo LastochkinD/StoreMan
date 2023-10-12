@@ -15,14 +15,17 @@ store = Store()
 app = Flask(__name__)
 CORS(app)
 
+#Получить список товаров
 @app.route("/get_products", methods = ['get'])
 def get_products():
     return jsonify(store.getProducts())
 
+#Получить список клиентов
 @app.route("/get_clients", methods = ['get'])
 def get_clients():
     return jsonify(store.getClients())
 
+#Добавить клиента
 @app.route("/add_client", methods = ['post'])
 def addClient():
     json_text = request.get_data()
@@ -30,6 +33,21 @@ def addClient():
     client = Client.newClient(store.dp,store.id,json_obj["client_name"],json_obj["client_address"],json_obj["client_phone"],json_obj["client_note"])
     return jsonify(client.getJsonObj())
 
+
+#Обновить данные клиента
+@app.route("/update_client", methods = ['post'])
+def addClient():
+    json_text = request.get_data()
+    json_obj = json.loads(json_text)
+    client = Client.loadFromDb(store.dp,json_obj["id"])
+    client.client_name = json_obj["client_name"]
+    client.client_address = json_obj["client_address"]
+    client.client_phone = json_obj["client_phone"]
+    client.client_note = json_obj["client_note"]
+    Client.saveToDb
+    return jsonify(client.getJsonObj())
+
+#Удалить клиента
 @app.route("/del_client", methods = ['post'])
 def updateClient():
     json_text = request.get_data()
@@ -38,6 +56,7 @@ def updateClient():
     result = Client.delClient(store.dp, int(json_obj["client_id"]))
     return jsonify({"Result":result})
 
+#Получить товар
 @app.route("/get_product", methods = ['get'])
 def get_product():
     product = Product.getProductFromDb(store.dp, request.args.get('id'))
