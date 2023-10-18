@@ -24,7 +24,8 @@ class BuyDocument:
 
     @classmethod
     def getBuyDocs(cls, dp:DataProvider, sup_name_filter: str):
-        dp.exQuery("select buy_documents.id, buy_documents.store_id, buy_num, buy_date, supplier_id, accepted, client_name from buy_documents left outer join clients on (buy_documents.supplier_id=clients.id) where (upper(client_name) like '%%%s%%') order by clients.client_name",(sup_name_filter.upper()))
+        sup_name_filter = '%'+sup_name_filter.upper()+'%'
+        dp.exQuery("select buy_documents.id, buy_documents.store_id, buy_num, buy_date, supplier_id, accepted, client_name from buy_documents left outer join clients on (buy_documents.supplier_id=clients.id) where (upper(coalesce(clients.client_name,'')) like %s) order by buy_documents.id desc limit 100",(sup_name_filter,))
         rows = dp.cursor.fetchall()
         data = []
         for row in rows:
@@ -32,7 +33,7 @@ class BuyDocument:
                 "id": row[0],
                 "store_id": row[1],
                 "buy_num": row[2],
-                "buy_date": row[3].strftime('%d.%m.%Y'),
+                "buy_date": row[3].strftime('%d.%m.%Y') if row[3] is not None else "",
                 "supplier_id": row[4],
                 "accepted": row[5],
                 "supplier_name": row[6]

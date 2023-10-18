@@ -29,6 +29,8 @@ def get_clients():
 @app.route("/get_buy_docs", methods = ['get'])
 def get_buy_docs():
     sup_name_filter = request.args.get('sup_name_filter')
+    if sup_name_filter is None:
+        sup_name_filter = ''
     return jsonify(BuyDocument.getBuyDocs(store.dp,sup_name_filter))
 
 #Добавить клиента
