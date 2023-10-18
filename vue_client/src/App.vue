@@ -5,6 +5,7 @@
       <nav>
         <ul>
           <li><router-link to="/">Главная</router-link></li>
+          <li><router-link to="/BuyDocs">Поступления товаров</router-link></li>         
           <li><router-link to="/clients">Клиенты</router-link></li>
           <li><router-link to="/products">Товары</router-link></li>
         </ul>

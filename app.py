@@ -25,6 +25,11 @@ def get_products():
 def get_clients():
     return jsonify(store.getClients())
 
+#Получить список клиентов
+@app.route("/get_buy_docs", methods = ['get'])
+def get_buy_docs():
+    return jsonify(BuyDocument.getBuyDocs(store.dp))
+
 #Добавить клиента
 @app.route("/add_client", methods = ['post'])
 def addClient():
@@ -36,7 +41,7 @@ def addClient():
 
 #Обновить данные клиента
 @app.route("/update_client", methods = ['post'])
-def addClient():
+def updateClient():
     json_text = request.get_data()
     json_obj = json.loads(json_text)
     client = Client.loadFromDb(store.dp,json_obj["id"])
@@ -49,7 +54,7 @@ def addClient():
 
 #Удалить клиента
 @app.route("/del_client", methods = ['post'])
-def updateClient():
+def delClient():
     json_text = request.get_data()
     json_obj = json.loads(json_text)
     print(json_obj["client_id"])

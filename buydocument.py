@@ -23,6 +23,24 @@ class BuyDocument:
         self.doc_products = doc_products
 
     @classmethod
+    def getBuyDocs(cls, dp:DataProvider):
+        dp.exQuery("select buy_documents.id, buy_documents.store_id, buy_num, buy_date, supplier_id, accepted, client_name from buy_documents left outer join clients on (buy_documents.supplier_id=clients.id)",())
+        rows = dp.cursor.fetchall()
+        data = []
+        for row in rows:
+            buy_doc = {
+                "id": row[0],
+                "store_id": row[1],
+                "buy_num": row[2],
+                "buy_date": row[3].strftime('%d.%m.%Y'),
+                "supplier_id": row[4],
+                "accepted": row[5],
+                "supplier_name": row[6]
+            }
+            data.append(buy_doc)
+        return data   
+
+    @classmethod
     def newBuyDocument(cls,dp:DataProvider, store_id):
         dp.exQuery("insert into buy_documents(store_id) values (%s) RETURNING id",(store_id,))
         row = dp.cursor.fetchone()
