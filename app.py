@@ -28,7 +28,8 @@ def get_clients():
 #Получить список клиентов
 @app.route("/get_buy_docs", methods = ['get'])
 def get_buy_docs():
-    return jsonify(BuyDocument.getBuyDocs(store.dp))
+    sup_name_filter = request.args.get('sup_name_filter')
+    return jsonify(BuyDocument.getBuyDocs(store.dp,sup_name_filter))
 
 #Добавить клиента
 @app.route("/add_client", methods = ['post'])

@@ -23,8 +23,8 @@ class BuyDocument:
         self.doc_products = doc_products
 
     @classmethod
-    def getBuyDocs(cls, dp:DataProvider):
-        dp.exQuery("select buy_documents.id, buy_documents.store_id, buy_num, buy_date, supplier_id, accepted, client_name from buy_documents left outer join clients on (buy_documents.supplier_id=clients.id)",())
+    def getBuyDocs(cls, dp:DataProvider, sup_name_filter: str):
+        dp.exQuery("select buy_documents.id, buy_documents.store_id, buy_num, buy_date, supplier_id, accepted, client_name from buy_documents left outer join clients on (buy_documents.supplier_id=clients.id) where (upper(client_name) like '%%%s%%') order by clients.client_name",(sup_name_filter.upper()))
         rows = dp.cursor.fetchall()
         data = []
         for row in rows:
