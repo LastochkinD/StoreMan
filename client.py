@@ -6,7 +6,7 @@ from dataprovider import DataProvider
 
 class Client:
 
-    def __init__(self, dp:DataProvider, client_id, store_id, client_name, client_address, client_phone, client_note):
+    def __init__(self, client_id, client_name, client_address, client_phone, client_note):
             self.id = client_id
             self.client_name = client_name
             self.client_address = client_address
@@ -14,11 +14,11 @@ class Client:
             self.client_note = client_note
 
     @classmethod
-    def newClient(cls, dp:DataProvider, store_id, client_name, client_address, client_phone, client_note):
+    def newClient(cls, dp:DataProvider, client_name, client_address, client_phone, client_note):
         dp.cursor.execute("insert into clients(store_id, client_name, client_address, client_phone, client_note) values(%s,%s,%s,%s,%s) RETURNING id",(store_id,client_name,client_address, client_phone, client_note))
         dp.connection.commit()
         inserted_id = dp.cursor.fetchone()[0]
-        return Client(dp, inserted_id, store_id, client_name, client_address, client_phone, client_note)
+        return Client(inserted_id, client_name, client_address, client_phone, client_note)
 
     @classmethod
     def loadFromDb(cls,dp:DataProvider,id):

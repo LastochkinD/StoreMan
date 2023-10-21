@@ -52,7 +52,7 @@ class BuyDocument:
     def getFromDb(cls, dp:DataProvider, id):
             dp.exQuery("select buy_documents.id, buy_documents.store_id, buy_documents.buy_num, buy_documents.buy_date, clients.id supplier_id, clients.client_name, clients.client_address, clients.client_phone, clients.client_note from buy_documents inner join clients on buy_documents.supplier_id=clients.id where buy_documents.id=%s",(id,))
             row = dp.cursor.fetchone()
-            supplier = Client(row[4],row[1], row[5],row[6],row[7],row[8])
+            supplier = Client(row[4], row[1], row[5], row[6], row[7], row[8])
             store_id = row[1]
             buy_num = row[2]
             buy_date = row[3]
@@ -66,8 +66,8 @@ class BuyDocument:
             return BuyDocument(id,store_id,buy_num,buy_date,supplier,products)
 
     @classmethod
-    def updateToDb(cls, dp:DataProvider, id, store_id, buy_num, buy_date, supplier_id):
-        dp.exQuery("update buy_documents set store_id=%s, buy_num=%s, buy_date=%s, supplier_id=%s where id=%s",(store_id, buy_num, buy_date.strftime("%Y-%m-%d"), supplier_id, id))
+    def updateToDb(cls, dp:DataProvider, id, buy_num, buy_date, supplier_id):
+        dp.exQuery("update buy_documents set buy_num=%s, buy_date=%s, supplier_id=%s where id=%s",(buy_num, buy_date.strftime("%Y-%m-%d"), supplier_id, id))
 
     def toString(self):
         date_str = self.buy_date.strftime('%d.%m.%Y')
@@ -77,7 +77,7 @@ class BuyDocument:
         products = []
         for product in self.doc_products:
             products.append({"id":product.id, "product_code":product.product.product_code, "product_name":product.product.product_name, "rec_price":product.product.rec_price, "qty": product.qty, "buy_price": product.doc_price})
-        obj = {"id":self.id, "buy_num":self.buy_num, "buy_date":self.buy_date, "products":products}
+        obj = {"id":self.id, "buy_num":self.buy_num, "buy_date":self.buy_date.strftime('%d.%m.%Y'), "supplier_id":self.supplier.id, "supplier_name": self.supplier.client_name, "products":products}
         return obj
 
     def addProduct(self, doc_product:DocProduct):

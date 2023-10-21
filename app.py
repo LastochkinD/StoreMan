@@ -25,6 +25,12 @@ def get_products():
 def get_clients():
     return jsonify(store.getClients())
 
+#Получить список клиентов с фильтром
+@app.route("/get_clientsf", methods = ['get'])
+def get_clientsf():
+    return jsonify(Client.getClientsf(store.dp,request.args.get('name_filter')))
+
+
 #Получить список клиентов
 @app.route("/get_buy_docs", methods = ['get'])
 def get_buy_docs():
@@ -105,7 +111,7 @@ def newBuyDoc():
 @app.route("/update_buy_doc", methods = ['post'])
 def updateBuyDoc():
     json_obj = json.loads(request.get_data())
-    BuyDocument.updateToDb(store.dp, json_obj["id"], json_obj["store_id"], json_obj["buy_num"], datetime.strptime(json_obj["buy_date"], '%d.%m.%Y'), json_obj["supplier_id"])
+    BuyDocument.updateToDb(store.dp, json_obj["id"], json_obj["buy_num"], datetime.strptime(json_obj["buy_date"], '%d.%m.%Y'), json_obj["supplier_id"])
     return jsonify({"Result":"Ok"})
 
 @app.route("/add_buy_product", methods = ['post'])
