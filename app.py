@@ -28,7 +28,10 @@ def get_clients():
 #Получить список клиентов с фильтром
 @app.route("/get_clientsf", methods = ['get'])
 def get_clientsf():
-    return jsonify(Client.getClientsf(store.dp,request.args.get('name_filter')))
+    name_filter = request.args.get('name_filter')
+    if name_filter is None:
+        name_filter = ''
+    return jsonify(Client.getClientsf(store.dp,name_filter))
 
 
 #Получить список клиентов

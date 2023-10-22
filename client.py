@@ -6,15 +6,30 @@ from dataprovider import DataProvider
 
 class Client:
 
-    def __init__(self, client_id, client_name, client_address, client_phone, client_note):
+    def __init__(self, store_id, client_id, client_name, client_address, client_phone, client_note):
             self.id = client_id
+            self.store_id = store_id
             self.client_name = client_name
             self.client_address = client_address
             self.client_phone = client_phone
             self.client_note = client_note
 
     @classmethod
-    def newClient(cls, dp:DataProvider, client_name, client_address, client_phone, client_note):
+    def getClientsf(cls, dp: DataProvider, name_filter: str):
+        filter = '%'+name_filter.upper()+'%'
+        dp.exQuery("SELECT id, client_name FROM clients where upper(client_name) like %s order by client_name limit 10",(filter,))
+        rows = dp.cursor.fetchall()
+        data = []
+        for row in rows:
+            client = {
+                "id": row[0],
+                "client_name": row[1]
+            }
+            data.append(client)
+        return data    
+
+    @classmethod
+    def newClient(cls, dp:DataProvider, store_id, client_name, client_address, client_phone, client_note):
         dp.cursor.execute("insert into clients(store_id, client_name, client_address, client_phone, client_note) values(%s,%s,%s,%s,%s) RETURNING id",(store_id,client_name,client_address, client_phone, client_note))
         dp.connection.commit()
         inserted_id = dp.cursor.fetchone()[0]

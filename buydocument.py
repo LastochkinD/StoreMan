@@ -52,7 +52,7 @@ class BuyDocument:
     def getFromDb(cls, dp:DataProvider, id):
             dp.exQuery("select buy_documents.id, buy_documents.store_id, buy_documents.buy_num, buy_documents.buy_date, clients.id supplier_id, clients.client_name, clients.client_address, clients.client_phone, clients.client_note from buy_documents inner join clients on buy_documents.supplier_id=clients.id where buy_documents.id=%s",(id,))
             row = dp.cursor.fetchone()
-            supplier = Client(row[4], row[1], row[5], row[6], row[7], row[8])
+            supplier = Client(row[1], row[4], row[5], row[6], row[7], row[8])
             store_id = row[1]
             buy_num = row[2]
             buy_date = row[3]
